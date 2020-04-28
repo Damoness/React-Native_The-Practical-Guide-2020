@@ -8,7 +8,7 @@ import {
 import MealList from "../components/MealList";
 
 import { useSelector } from "react-redux";
-import { RootState } from "../store/reducers/types";
+import { RootState } from "../store/index";
 
 type Params = { categoryId: string };
 type ScreenProps = { language: string };
@@ -22,7 +22,7 @@ const CategoryMealsScreen: NavigationStackScreenComponent<
   const catId = props.navigation.getParam("categoryId");
 
   const availableMeals = useSelector(
-    (state: RootState) => state.meals.filterMeals
+    (state: RootState) => state.meal.filteredMeals
   );
 
   const displayMeals = availableMeals.filter((meal) => {

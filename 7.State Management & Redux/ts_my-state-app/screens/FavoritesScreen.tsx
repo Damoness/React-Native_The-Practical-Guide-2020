@@ -3,11 +3,11 @@ import { NavigationStackScreenComponent } from "react-navigation-stack";
 import MealList from "../components/MealList";
 import HeaderMenu from "../components/HeaderMenu";
 import { useSelector } from "react-redux";
-import { RootState } from "../store/reducers/types";
+import { RootState } from "../store/index";
 
 const FavoritesScreen: NavigationStackScreenComponent = (props) => {
   const favoritesMeals = useSelector(
-    (state: RootState) => state.meals.favoritesMeals
+    (state: RootState) => state.meal.favoriteMeals
   );
 
   return <MealList listData={favoritesMeals} navigation={props.navigation} />;
