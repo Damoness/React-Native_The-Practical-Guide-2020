@@ -11,7 +11,7 @@ const initialState={
 
 const mealsReducer = (state = initialState, action)=>{
 
-    return null;
+    return state;
 }
 
 export default mealsReducer;

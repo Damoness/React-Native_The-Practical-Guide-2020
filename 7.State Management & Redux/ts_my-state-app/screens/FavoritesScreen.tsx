@@ -1,28 +1,23 @@
-import React from 'react'
-import {NavigationStackScreenComponent} from 'react-navigation-stack'
-import { MEALS } from '../data/dummy-data'
-import MealList from '../components/MealList'
-import HeaderMenu from '../components/HeaderMenu'
+import React from "react";
+import { NavigationStackScreenComponent } from "react-navigation-stack";
+import MealList from "../components/MealList";
+import HeaderMenu from "../components/HeaderMenu";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/reducers/types";
 
+const FavoritesScreen: NavigationStackScreenComponent = (props) => {
+  const favoritesMeals = useSelector(
+    (state: RootState) => state.meals.favoritesMeals
+  );
 
-const FavoritesScreen:NavigationStackScreenComponent = (props) => {
+  return <MealList listData={favoritesMeals} navigation={props.navigation} />;
+};
 
-    const favoritesMeals = MEALS.filter(meal=>meal.id == 'm1' || meal.id == 'm2' );
+FavoritesScreen.navigationOptions = (props) => {
+  return {
+    headerTitle: "My Favorites",
+    headerLeft: () => <HeaderMenu />,
+  };
+};
 
-    return (
-        <MealList listData={favoritesMeals} navigation={props.navigation}/>
-    )
-}
-
-
-FavoritesScreen.navigationOptions = (props)=>{
-
-    return{
-        headerTitle:'My Favorites',
-        headerLeft: ()=><HeaderMenu  />,
-    }
-
-}
-  
-
-export default FavoritesScreen
+export default FavoritesScreen;

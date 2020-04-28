@@ -7,6 +7,8 @@ import HeaderButton from '../components/HeaderButton'
 import HeaderMenu from "../components/HeaderMenu";
 import { ScrollView } from "react-native-gesture-handler";
 import DefaultText from "../components/DefaultText";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/reducers/types";
 
 type Params = { mealId: string };
 
@@ -23,7 +25,9 @@ const MealDetailScreen:NavigationStackScreenComponent<Params> = (props) => {
 
   const mealId = props.navigation.getParam('mealId');
 
-  const selectedMeal = MEALS.find(meal=> meal.id === mealId);
+  const meals = useSelector((state:RootState)=>state.meals.meals);
+
+  const selectedMeal = meals.find(meal=> meal.id === mealId);
 
 
   return (

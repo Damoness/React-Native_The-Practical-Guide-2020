@@ -6,9 +6,7 @@ import CategoryGridTitle from "../components/CategoryGridTitle";
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 import HeaderMenu from "../components/HeaderMenu";
 
-type Props={
-
-}
+type Props = {};
 
 const CategoriesScreen: NavigationStackScreenComponent = (props) => {
   return (
@@ -26,7 +24,7 @@ CategoriesScreen.navigationOptions = (props) => ({
     backgroundColor: Platform.OS == "android" ? Colors.primaryColor : "",
   },
   headerTintColor: Platform.OS == "android" ? "white" : Colors.primaryColor,
-  headerLeft: ()=><HeaderMenu  />,
+  headerLeft: () => <HeaderMenu />,
 });
 
 export default CategoriesScreen;

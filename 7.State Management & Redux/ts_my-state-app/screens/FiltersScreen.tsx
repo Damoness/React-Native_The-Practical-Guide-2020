@@ -1,4 +1,4 @@
-import React, { useState ,useEffect,useCallback} from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { View, Text, StyleSheet, Platform } from "react-native";
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 import HeaderMenu from "../components/HeaderMenu";
@@ -6,7 +6,6 @@ import HeaderButton from "../components/HeaderButton";
 import { Switch } from "react-native-paper";
 import Colors from "../constants/Colors";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import { DrawerActions } from "react-navigation-drawer";
 
 const FilterSwitch = (props) => {
   return (
@@ -23,7 +22,6 @@ const FilterSwitch = (props) => {
 };
 
 const FiltersScreen: NavigationStackScreenComponent = (props) => {
-
   const { navigation } = props;
 
   const [isGlutenFree, setIsGlutenFree] = useState(false);
@@ -31,41 +29,20 @@ const FiltersScreen: NavigationStackScreenComponent = (props) => {
   const [isVegan, setIsVegan] = useState(false);
   const [isVegetarian, setIsVegetarian] = useState(false);
 
-
-  // const saveFilters = useCallback(() => {
-  //   const appliedFilters = {
-  //     glutenFree: isGlutenFree,
-  //     lactoseFree: isLactoseFree,
-  //     vegan: isVegan,
-  //     isVegetarian: isVegetarian
-  //   };
-
-  //   console.log(appliedFilters);
-  // }, [isGlutenFree, isLactoseFree, isVegan, isVegetarian]);
-
-  // useEffect(() => {
-  //   navigation.setParams({ save: saveFilters });
-  // }, [saveFilters]);
-
-
-  const saveFilters = useCallback(()=>{
+  const saveFilters = useCallback(() => {
     const appliedFilters = {
-      glutenFree :isGlutenFree,
-      lactoseFree:isLactoseFree,
-      vegan:isVegan,
-      isVegetarian:isVegetarian,
-    }
+      glutenFree: isGlutenFree,
+      lactoseFree: isLactoseFree,
+      vegan: isVegan,
+      isVegetarian: isVegetarian,
+    };
 
     console.log(appliedFilters);
-  },[isGlutenFree,isLactoseFree,isVegan,isVegetarian])
+  }, [isGlutenFree, isLactoseFree, isVegan, isVegetarian]);
 
   useEffect(() => {
-    
-    navigation.setParams({save:saveFilters});
-
-  },[saveFilters])
-
-
+    navigation.setParams({ save: saveFilters });
+  }, [saveFilters]);
 
   return (
     <View style={styles.screen}>
@@ -118,17 +95,17 @@ FiltersScreen.navigationOptions = (props) => {
   return {
     headerTitle: "My Favorites",
     headerLeft: () => <HeaderMenu />,
-    headerRight:()=>{
-        return (
-            <HeaderButtons HeaderButtonComponent={HeaderButton}>
-                <Item
-                    title="Save"
-                    iconName="ios-save"
-                    onPress={props.navigation.getParam('save')}
-                />
-            </HeaderButtons>
-        )
-    }
+    headerRight: () => {
+      return (
+        <HeaderButtons HeaderButtonComponent={HeaderButton}>
+          <Item
+            title="Save"
+            iconName="ios-save"
+            onPress={props.navigation.getParam("save")}
+          />
+        </HeaderButtons>
+      );
+    },
   };
 };
 
