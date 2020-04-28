@@ -4,6 +4,8 @@ import Meal from "../models/meal";
 import MealItem from "./MealItem";
 import { MEAL_DETAIL } from "../navigation/Routers";
 import { NavigationStackProp } from "react-navigation-stack";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 
 type Props = {
   listData: Array<Meal>;
@@ -11,12 +13,18 @@ type Props = {
 };
 
 const MealList: React.FC<Props> = (props) => {
+
+  const favoriteMeals = useSelector((state:RootState) => state.meal.favoriteMeals);
+
   const renderMealItem: ListRenderItem<Meal> = ({ item, index }) => {
+
+    const isFav = favoriteMeals.some(meal =>meal.id == item.id);
+
     return (
       <MealItem
         {...item}
         onSelectMeal={() => {
-          props.navigation.navigate(MEAL_DETAIL, { mealId: item.id ,mealTitle:item.title});
+          props.navigation.navigate(MEAL_DETAIL, { mealId: item.id ,mealTitle:item.title,isFav:isFav});
         }}
       />
     );

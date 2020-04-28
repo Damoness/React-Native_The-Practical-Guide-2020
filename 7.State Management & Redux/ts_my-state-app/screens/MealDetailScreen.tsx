@@ -12,6 +12,7 @@ import { toggleFavorite } from "../store/meal/actions";
 type Params = { 
   mealId: string 
   mealTitle?:string,
+  isFav:boolean,
   dispatch:any,
 };
 
@@ -30,11 +31,19 @@ const MealDetailScreen:NavigationStackScreenComponent<Params> = (props) => {
 
   const meals = useSelector((state:RootState)=>state.meal.meals);
 
+  const currentMealIsFavorite = useSelector((state:RootState)=>state.meal.favoriteMeals.some(meal=>meal.id == mealId));
+
   const selectedMeal = meals.find(meal=> meal.id === mealId);
 
   const dispatch = useDispatch();
 
-  
+  useEffect(()=>{
+
+    props.navigation.setParams({isFav:currentMealIsFavorite});
+
+  },[currentMealIsFavorite])
+
+
   useEffect(() => {
 
     props.navigation.setParams({dispatch:()=>dispatch(toggleFavorite(mealId))});
@@ -68,12 +77,14 @@ MealDetailScreen.navigationOptions = (props)=>{
 
   const mealTitle = props.navigation.getParam('mealTitle');
 
+  const isFav = props.navigation.getParam('isFav');
+
   return {
     headerTitle:mealTitle,
     headerRight: ()=> {
       return (
         <HeaderButtons HeaderButtonComponent={HeaderButton}>
-          <Item title="Favorite" iconName="ios-star" onPress={props.navigation.getParam('dispatch')} />
+          <Item title="Favorite" iconName={isFav?"ios-star":"ios-star-outline"} onPress={props.navigation.getParam('dispatch')} />
         </HeaderButtons>
       )
     }
