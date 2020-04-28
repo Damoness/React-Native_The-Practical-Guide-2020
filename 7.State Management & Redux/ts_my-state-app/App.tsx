@@ -4,12 +4,20 @@ import * as Font from 'expo-font';
 import {AppLoading} from 'expo'
 import MealsNavigator from './navigation/MealsNavigator';
 
+import {createStore, combineReducers} from 'redux'
+import {Provider} from 'react-redux'
+import mealsReducer from './store/reducers/meals';
+
 const fetchFonts = () => {
  return Font.loadAsync({
     'open-sans':require('./assets/fonts/Open_Sans/OpenSans-Regular.ttf'),
     'open-sans-bold':require('./assets/fonts/Open_Sans/OpenSans-Bold.ttf')
   })
 }
+
+const store = createStore(combineReducers({
+  meals:mealsReducer
+}))
 
 export default function App() {
 
@@ -24,7 +32,9 @@ export default function App() {
   }
 
   return (
-    <MealsNavigator/>
+    <Provider store={store}>
+      <MealsNavigator/>
+    </Provider>
   );
 }
 
