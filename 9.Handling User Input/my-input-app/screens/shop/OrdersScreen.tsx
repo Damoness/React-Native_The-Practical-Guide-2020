@@ -1,10 +1,10 @@
 import React from "react";
 import {FlatList} from "react-native";
 import { NavigationStackScreenComponent } from "react-navigation-stack";
-import HeaderMenu from "../../components/HeaderMenu";
+import HeaderMenu from "../../components/UI/HeaderMenu";
 import {useSelector } from "react-redux";
 import { AppState } from "../../store";
-import OrderItem from "../../components/OrderItem";
+import OrderItem from "../../components/shop/OrderItem";
 
 const OrdersScreen: NavigationStackScreenComponent = () => {
   const orders = useSelector((state: AppState) => state.order.orders);

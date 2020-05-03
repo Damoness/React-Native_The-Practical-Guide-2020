@@ -1,12 +1,12 @@
 import React from 'react'
 import { View,StyleSheet, FlatList,Text} from 'react-native'
-import ProductItem from '../../components/ProductItem'
+import ProductItem from '../../components/shop/ProductItem'
 import {NavigationStackScreenComponent} from 'react-navigation-stack'
 import { useSelector, useDispatch } from 'react-redux'
 import {AppState} from '../../store'
-import HeaderMenu from '../../components/HeaderMenu'
+import HeaderMenu from '../../components/UI/HeaderMenu'
 import { addToCart } from '../../store/cart/actions'
-import HeaderItem from '../../components/HeaderItem'
+import HeaderItem from '../../components/UI/HeaderItem'
 
 const ProductsOverviewScreen:NavigationStackScreenComponent= (props) => {
 

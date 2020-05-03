@@ -2,7 +2,7 @@ import React, { useEffect, useCallback, useReducer } from "react";
 import { View, Text, StyleSheet, TextInput, Button, Alert } from "react-native";
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 import Product from "../../models/product";
-import HeaderItem from "../../components/HeaderItem";
+import HeaderItem from "../../components/UI/HeaderItem";
 import { useDispatch } from "react-redux";
 import { updateProduct, addProduct } from "../../store/product/actions";
 

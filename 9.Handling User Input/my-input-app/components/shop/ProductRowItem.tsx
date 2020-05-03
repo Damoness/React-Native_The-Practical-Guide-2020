@@ -1,9 +1,9 @@
 import React from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
-import CartItem from "../models/cart-item";
+import CartItem from "../../models/cart-item";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import Colors from "../constants/Colors";
+import Colors from "../../constants/Colors";
 
 type Props = {
   item: CartItem;

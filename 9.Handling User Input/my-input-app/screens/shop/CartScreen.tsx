@@ -4,8 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { AppState } from "../../store";
 import { deleteFromCart} from "../../store/cart/actions";
 import { addOrder } from "../../store/order/actions";
-import ProductRowItem from "../../components/ProductRowItem";
-import Card from "../../components/Card";
+import ProductRowItem from "../../components/shop/ProductRowItem";
+import Card from "../../components/UI/Card";
 import Colors from "../../constants/Colors";
 
 

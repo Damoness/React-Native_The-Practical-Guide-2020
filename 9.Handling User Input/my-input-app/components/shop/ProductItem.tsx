@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text ,StyleSheet,Image, Button,TouchableOpacity} from 'react-native'
-import Card from './Card'
-import Colors from '../constants/Colors'
+import Card from '../UI/Card'
+import Colors from '../../constants/Colors'
 
 
 type Props = {

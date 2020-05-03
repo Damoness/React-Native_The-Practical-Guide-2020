@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
-import Order from "../models/order";
-import Card from "./Card";
+import Order from "../../models/order";
+import Card from "../UI/Card";
 import ProductRowItem from "./ProductRowItem";
-import Colors from "../constants/Colors";
+import Colors from "../../constants/Colors";
 
 type Props = {
   order: Order;
