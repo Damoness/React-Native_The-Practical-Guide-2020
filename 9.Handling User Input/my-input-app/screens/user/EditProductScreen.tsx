@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback,useReducer } from "react";
-import { View, Text, StyleSheet, TextInput, Button } from "react-native";
+import React, { useEffect, useCallback, useReducer } from "react";
+import { View, Text, StyleSheet, TextInput, Button, Alert } from "react-native";
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 import Product from "../../models/product";
 import HeaderItem from "../../components/HeaderItem";
@@ -11,49 +11,68 @@ type Params = {
   submit?: () => void;
 };
 
+type TestState = {
+  inputValues: {
+    title: string;
+    imageUrl: string;
+    price: number;
+    description: string;
+  };
+  inputValidities: {
+    title: boolean;
+    imageUrl: boolean;
+    price: boolean;
+    description: boolean;
+  };
+  formIsValid: boolean;
+};
 
-type TestState={
-  count:number,
-  increment:number,
-  decrement:number,
+type TestAction = {
+  type: "FORM_INPUT_UPDATE";
+  data: {
+    inputIdentifier: "title" | "imageUrl" | "price" | "description";
+    inputValue: string;
+    isValid: boolean;
+  };
+};
+
+function hasKey<O>(obj: O, key: keyof any): key is keyof O {
+  return key in obj;
 }
 
+function formReducer(state: TestState, action: TestAction): TestState {
+  switch (action.type) {
+    case "FORM_INPUT_UPDATE": {
+      const updatedInputValues = {
+        ...state.inputValues,
+        [action.data.inputIdentifier]: action.data.inputValue,
+      };
 
+      const updatedInputValidities = {
+        ...state.inputValidities,
+        [action.data.inputIdentifier]: action.data.isValid,
+      };
 
-type TestAction ={
-  type:'increment' | 'decrement'
-}
+      let updatedFormIsValid = true;
 
-const initialState:TestState = {
-  count:0,
-  increment:0,
-  decrement:0,
-}
+      for (const key in updatedInputValidities) {
+        if (hasKey(updatedInputValidities, key)) {
+          updatedFormIsValid =
+            updatedFormIsValid && updatedInputValidities[key];
+        }
+      }
 
-function reducer(state:TestState,action:TestAction):TestState{
-
-  switch(action.type){
-
-    case 'increment':{
       return {
-        ...state,
-        count:state.count + 1,
-        increment:state.increment + 1,
+        inputValues: updatedInputValues,
+        inputValidities: updatedInputValidities,
+        formIsValid: updatedFormIsValid,
       };
     }
-    case 'decrement':{
-      return {
-        ...state,
-        count:state.count -1,
-        decrement:state.decrement + 1,
-      };
-    }
+
     default:
       throw new Error();
   }
-
 }
-
 
 const EditProductScreen: NavigationStackScreenComponent<Params> = (props) => {
   const product = props.navigation.getParam("product");
@@ -62,30 +81,55 @@ const EditProductScreen: NavigationStackScreenComponent<Params> = (props) => {
 
   const dispatch = useDispatch();
 
-  const [state, dispatch1] = useReducer(reducer, initialState);
+  const initialState: TestState = {
+    inputValues: {
+      title: product ? product.title : "",
+      imageUrl: product ? product.imageUrl : "",
+      price: product ? product.price : 0,
+      description: product ? product.description : "",
+    },
+    inputValidities: {
+      title: product ? true : false,
+      imageUrl: product ? true : false,
+      description: product ? true : false,
+      price: product ? true : false,
+    },
+    formIsValid: product ? true : false,
+  };
 
-  
-  const [title, setTitle] = useState(product ? product.title : "");
-  const [imageUrl, setImageUrl] = useState(product ? product.imageUrl : "");
-  const [description, setDescription] = useState(
-    product ? product.description : ""
-  );
-  const [price, setPrice] = useState(product ? product.price : 0);
+  const [formState, dispatchFormState] = useReducer(formReducer, initialState);
+
+  console.log(formState);
+
+  const {
+    inputValues: { title, imageUrl, description, price },
+  } = formState;
 
   const submitHandler = useCallback(() => {
-    const product = new Product(
-      new Date().toString(),
-      "u1",
-      title,
-      imageUrl,
-      description,
-      price
-    );
+    if (!formState.formIsValid) {
+      Alert.alert("表单数据有问题");
+      return;
+    }
 
-    if (isEditing) {
-      dispatch(updateProduct(product));
+    if (product) {
+      dispatch(
+        updateProduct(
+          new Product(product.id, "u1", title, imageUrl, description, price)
+        )
+      );
     } else {
-      dispatch(addProduct(product));
+      dispatch(
+        addProduct(
+          new Product(
+            new Date().toString(),
+            "u1",
+            title,
+            imageUrl,
+            description,
+            price
+          )
+        )
+      );
     }
 
     props.navigation.goBack();
@@ -100,25 +144,20 @@ const EditProductScreen: NavigationStackScreenComponent<Params> = (props) => {
   return (
     <View style={styles.container}>
       <View style={styles.formControl}>
-        <Text>
-          Count:{JSON.stringify(state)}
-        </Text>
-        <Button onPress={()=>{
-
-          dispatch1({type:'increment'});
-
-        }} title="+" />
-        <Button onPress={()=>{
-
-          dispatch1({type:'decrement'});
-          
-
-        }} title="-" />
         <Text style={styles.title}>Title</Text>
         <TextInput
           style={styles.textInput}
           defaultValue={title}
-          onChangeText={setTitle}
+          onChangeText={(text) =>
+            dispatchFormState({
+              type: "FORM_INPUT_UPDATE",
+              data: {
+                inputIdentifier: "title",
+                inputValue: text,
+                isValid: text.length > 5,
+              },
+            })
+          }
         />
       </View>
 
@@ -127,7 +166,16 @@ const EditProductScreen: NavigationStackScreenComponent<Params> = (props) => {
         <TextInput
           style={styles.textInput}
           defaultValue={imageUrl}
-          onChangeText={setImageUrl}
+          onChangeText={(text) =>
+            dispatchFormState({
+              type: "FORM_INPUT_UPDATE",
+              data: {
+                inputIdentifier: "imageUrl",
+                inputValue: text,
+                isValid: true,
+              },
+            })
+          }
         />
       </View>
 
@@ -135,10 +183,19 @@ const EditProductScreen: NavigationStackScreenComponent<Params> = (props) => {
         <View style={styles.formControl}>
           <Text style={styles.title}>Price</Text>
           <TextInput
-            keyboardType='decimal-pad'
+            keyboardType="decimal-pad"
             style={styles.textInput}
             defaultValue={price == 0 ? "" : price.toString()}
-            onChangeText={(text) => setPrice(parseFloat(text))}
+            onChangeText={(text) =>
+              dispatchFormState({
+                type: "FORM_INPUT_UPDATE",
+                data: {
+                  inputIdentifier: "price",
+                  inputValue: text,
+                  isValid: true,
+                },
+              })
+            }
           />
         </View>
       )}
@@ -147,7 +204,16 @@ const EditProductScreen: NavigationStackScreenComponent<Params> = (props) => {
         <TextInput
           style={styles.textInput}
           defaultValue={description}
-          onChangeText={setDescription}
+          onChangeText={(text) =>
+            dispatchFormState({
+              type: "FORM_INPUT_UPDATE",
+              data: {
+                inputIdentifier: "description",
+                inputValue: text,
+                isValid: true,
+              },
+            })
+          }
         />
       </View>
     </View>
