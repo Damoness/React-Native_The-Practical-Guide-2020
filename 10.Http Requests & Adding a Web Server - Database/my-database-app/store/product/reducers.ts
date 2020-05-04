@@ -1,5 +1,5 @@
 import {allProducts} from "../../data/dummy-data";
-import { ProductAction ,ProductState, DELETE_PRODUCT, UPDATE_PRODUCT, ADD_PRODUCT} from "./types";
+import { ProductAction ,ProductState, DELETE_PRODUCT, UPDATE_PRODUCT, ADD_PRODUCT, SET_PRODUCTS} from "./types";
 
 
 const initialState:ProductState={
@@ -56,6 +56,14 @@ export function productReducer(state = initialState,action:ProductAction):Produc
             }
             
             
+        }
+        case SET_PRODUCTS:{
+
+            return{
+                availableProducts:action.data,
+                userProducts:action.data.filter(product=>product.userId == 'u1')
+            }
+
         }
         default:{
             return state;
