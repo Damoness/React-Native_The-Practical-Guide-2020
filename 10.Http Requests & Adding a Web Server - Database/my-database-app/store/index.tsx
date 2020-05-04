@@ -1,4 +1,5 @@
-import {createStore,combineReducers} from 'redux'
+import {createStore,combineReducers,applyMiddleware} from 'redux'
+import ReduxThunk from 'redux-thunk'
 import {productReducer} from './product/reducers'
 import {cartReducer} from './cart/reducers'
 import {orderReducer} from './order/reducers'
@@ -12,4 +13,4 @@ const rootReducer = combineReducers({
 
 export type AppState = ReturnType<typeof rootReducer>
 
-export default createStore(rootReducer,composeWithDevTools())
+export default createStore(rootReducer,composeWithDevTools(applyMiddleware(ReduxThunk)))

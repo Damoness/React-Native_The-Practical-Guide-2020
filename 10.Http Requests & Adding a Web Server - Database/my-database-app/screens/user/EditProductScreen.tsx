@@ -123,14 +123,10 @@ const EditProductScreen: NavigationStackScreenComponent<Params> = (props) => {
     } else {
       dispatch(
         addProduct(
-          new Product(
-            new Date().toString(),
-            "u1",
             title,
             imageUrl,
+            price,
             description,
-            price
-          )
         )
       );
     }
