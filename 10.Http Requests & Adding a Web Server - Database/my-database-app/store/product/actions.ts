@@ -7,28 +7,40 @@ export function fetchProducts(){
 
     return async (dispatch:any)=>{
 
+        try {
+
+            const response =  await fetch('https://rn-complete-guide-c0db7.firebaseio.com/products.json')
+
+            if(!response.ok){
+                throw new Error('Something went wrong')
+            }
+
+            const resJson = await response.json();
+
+            console.log(resJson);
+
+            const products = [];
     
-        const response =  await fetch('https://rn-complete-guide-c0db7.firebaseio.com/products.json')
+            for(let key in resJson){
+    
+                const {title,imageUrl,price,description} = resJson[key];
+                const product = new Product(key,'u1',title,imageUrl,description,price);
+                products.push(product)
+            }
+    
+            console.log(products);
+    
+            dispatch({
+                type:SET_PRODUCTS,
+                data:products,
+            })
 
-        const resJson = await response.json();
-
-        console.log(resJson);
-
-        const products = [];
-
-        for(let key in resJson){
-
-            const {title,imageUrl,price,description} = resJson[key];
-            const product = new Product(key,'u1',title,imageUrl,description,price);
-            products.push(product)
+            
+        } catch (error) {
+            
+            throw error;
         }
-
-        console.log(products);
-
-        dispatch({
-            type:SET_PRODUCTS,
-            data:products,
-        })
+    
 
     }
 }

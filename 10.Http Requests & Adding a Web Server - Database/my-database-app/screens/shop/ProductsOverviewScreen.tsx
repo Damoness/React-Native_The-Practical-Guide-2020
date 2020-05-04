@@ -1,5 +1,5 @@
-import React,{useEffect} from 'react'
-import { View,StyleSheet,FlatList} from 'react-native'
+import React,{useEffect,useState, useCallback} from 'react'
+import { View,StyleSheet,FlatList,ActivityIndicator,Text, Button} from 'react-native'
 import ProductItem from '../../components/shop/ProductItem'
 import {NavigationStackScreenComponent} from 'react-navigation-stack'
 import { useSelector, useDispatch } from 'react-redux'
@@ -8,6 +8,7 @@ import HeaderMenu from '../../components/UI/HeaderMenu'
 import { addToCart } from '../../store/cart/actions'
 import HeaderItem from '../../components/UI/HeaderItem'
 import { fetchProducts } from '../../store/product/actions'
+import Colors from '../../constants/Colors'
 
 const ProductsOverviewScreen:NavigationStackScreenComponent= (props) => {
 
@@ -15,12 +16,59 @@ const ProductsOverviewScreen:NavigationStackScreenComponent= (props) => {
     const products = useSelector((state:AppState) => state.product.availableProducts);
     const dispatch = useDispatch();
 
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState(null);
+
+    
+    const loadProducts = useCallback (async ()=>{
+
+        setError(null);
+        setIsLoading(true);
+
+        try {
+
+            await dispatch(fetchProducts())
+            
+        } catch (error) {
+            
+            setError(error);
+
+        }finally{
+
+            setIsLoading(false);
+
+        }
+
+    },[dispatch])
+    
 
     useEffect(() => {
 
-        dispatch(fetchProducts());
+        loadProducts();
 
-    },[dispatch])
+    },[dispatch,loadProducts])
+
+
+    if(error){
+        return <View style={styles.centered}>
+            <Text>A error occurred!</Text>
+            <Button title={'Try Again'} color={Colors.masterColor} onPress={loadProducts} />
+        </View>
+    }
+
+
+    if(isLoading){
+        return <View style={styles.centered}>
+            <ActivityIndicator size={'large'} color={Colors.masterColor}/>
+        </View>
+    }
+
+
+    if(!isLoading && products.length == 0){
+        return <View style={styles.centered}>
+            <Text>No products found. Maybe start adding some!</Text>
+        </View>
+    }
 
     return (
         <View style={styles.container}>
@@ -65,6 +113,11 @@ ProductsOverviewScreen.navigationOptions = (props)=>{
 const styles = StyleSheet.create({
     container:{
         flex:1
+    },
+    centered:{
+        flex:1,
+        justifyContent:'center',
+        alignItems:'center'
     }
 })
 
