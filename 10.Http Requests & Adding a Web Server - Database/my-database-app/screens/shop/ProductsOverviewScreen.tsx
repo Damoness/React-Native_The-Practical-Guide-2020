@@ -19,6 +19,7 @@ const ProductsOverviewScreen:NavigationStackScreenComponent= (props) => {
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState(null);
 
+
     
     const loadProducts = useCallback (async ()=>{
 
@@ -41,6 +42,16 @@ const ProductsOverviewScreen:NavigationStackScreenComponent= (props) => {
 
     },[dispatch])
     
+
+    useEffect(()=>{
+
+         const willFocusSub =  props.navigation.addListener('willFocus',loadProducts);
+
+         return ()=>{
+            willFocusSub.remove();
+         }
+
+    },[loadProducts])
 
     useEffect(() => {
 

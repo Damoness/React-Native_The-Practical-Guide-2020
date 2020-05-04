@@ -1,6 +1,8 @@
 import { ADD_PRODUCT, DELETE_PRODUCT ,DeleteProductAction,UpdateProductAction, UPDATE_PRODUCT,AddProductAction, SET_PRODUCTS} from "./types";
 import Product from "../../models/product";
 
+const PRODUCTS_URL = 'https://rn-complete-guide-c0db7.firebaseio.com/products.json';
+
 export function fetchProducts(){
 
     console.log('fetchProducts');
@@ -9,7 +11,7 @@ export function fetchProducts(){
 
         try {
 
-            const response =  await fetch('https://rn-complete-guide-c0db7.firebaseio.com/products.json')
+            const response =  await fetch(PRODUCTS_URL)
 
             if(!response.ok){
                 throw new Error('Something went wrong')
@@ -50,7 +52,7 @@ export function addProduct(title:string,imageUrl:string,price:number,description
     
     return async (dispatch:any)=>{
 
-        const response =  await fetch('https://rn-complete-guide-c0db7.firebaseio.com/products.json',{
+        const response =  await fetch(PRODUCTS_URL,{
             method:'POST',
             headers:{
                 'Content-Type':'application/json'
