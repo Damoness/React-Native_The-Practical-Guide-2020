@@ -83,6 +83,8 @@ const Input: React.FC<Props> = (props) => {
 
   const textChangeHandler = (text:string) =>{
 
+    
+
     let isValid = true;
 
     if(props.required && text.trim().length == 0){
@@ -105,6 +107,8 @@ const Input: React.FC<Props> = (props) => {
 
     }
 
+    console.log(text,isValid);
+
     dispatch({
         type:'INPUT_CHANGE',
         value:text,
@@ -116,9 +120,12 @@ const Input: React.FC<Props> = (props) => {
 
   useEffect(() => {
       
-      if(inputState.touched){
-        onInputChange && onInputChange(id,inputState.value,initialState.isValid)
-      }
+      // if(inputState.touched){
+      //   onInputChange && onInputChange(id,inputState.value,inputState.isValid)
+      // }
+
+      //console.log("inputState",inputState);
+      onInputChange && onInputChange(id,inputState.value,inputState.isValid)
 
   }, [inputState,onInputChange,id])
 

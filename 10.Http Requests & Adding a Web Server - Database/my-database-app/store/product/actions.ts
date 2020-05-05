@@ -80,19 +80,75 @@ export function addProduct(title:string,imageUrl:string,price:number,description
 
 }
 
-export function deleteProduct(productId:string):DeleteProductAction{
+export function deleteProduct(productId:string){
 
-    return {
-        type:DELETE_PRODUCT,
-        productId:productId,
+
+    const url = `https://rn-complete-guide-c0db7.firebaseio.com/products/${productId}.json`;
+
+
+    return  async (dispatch:any)=>{
+
+
+        try {
+
+            const response = await fetch(url,{
+                method:'DELETE'
+            })
+
+            if(!response.ok){
+                throw new Error('Something went wrong');
+            }
+
+            dispatch({
+                type:DELETE_PRODUCT,
+                productId:productId,
+            })
+
+            
+        } catch (error) {
+            
+            throw error;
+        }
+
+
+
     }
+
 }
 
-export function updateProduct(product:Product):UpdateProductAction{
+export function updateProduct(product:Product){
 
-    return {
-        type:UPDATE_PRODUCT,
-        data:product,
+    const url = `https://rn-complete-guide-c0db7.firebaseio.com/products/${product.id}.json`;
+
+    console.log('updateProduct',product)
+
+    return async (dispatch:any)=>{
+
+
+        try {
+
+            const response = await fetch(url,{
+                method:'PATCH',
+                body:JSON.stringify(product)
+            })
+
+            if(!response.ok){
+                throw new Error('Something went wrong');
+            }
+
+            dispatch({
+                type:UPDATE_PRODUCT,
+                data:product,
+            })
+
+            
+        } catch (error) {
+            
+            throw error;
+
+        }
+
+
     }
 }
 

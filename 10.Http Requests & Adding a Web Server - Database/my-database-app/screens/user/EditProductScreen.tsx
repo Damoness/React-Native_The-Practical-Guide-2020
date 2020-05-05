@@ -100,14 +100,14 @@ const EditProductScreen: NavigationStackScreenComponent<Params> = (props) => {
 
   const [formState, dispatchFormState] = useReducer(formReducer, initialState);
 
-  console.log(formState);
+  //console.log(formState);
 
   const {
     inputValues: { title, imageUrl, description, price },
   } = formState;
 
   const submitHandler = useCallback(() => {
-    console.log(formState);
+    //console.log(formState);
 
     if (!formState.formIsValid) {
       Alert.alert("表单数据有问题");
@@ -142,6 +142,9 @@ const EditProductScreen: NavigationStackScreenComponent<Params> = (props) => {
 
   const inputChangeHandler = useCallback(
     (inputIdentifier, inputValue, inputValidity) => {
+
+      //console.log('inputChangeHandler:',inputIdentifier,inputValue,inputValidity);
+
       dispatchFormState({
         type: "FORM_INPUT_UPDATE",
         data: {
