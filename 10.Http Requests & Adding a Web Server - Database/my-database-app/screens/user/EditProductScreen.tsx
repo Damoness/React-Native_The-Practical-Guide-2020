@@ -134,11 +134,11 @@ const EditProductScreen: NavigationStackScreenComponent<Params> = (props) => {
       if (product) {
         await dispatch(
           updateProduct(
-            new Product(product.id, "u1", title, imageUrl, description, price)
+            new Product(product.id, "u1", title, imageUrl, description, +price)
           )
         );
       } else {
-       await dispatch(addProduct(title, imageUrl, price, description));
+       await dispatch(addProduct(title, imageUrl, +price, description));
       }
 
       setIsLoading(false)
