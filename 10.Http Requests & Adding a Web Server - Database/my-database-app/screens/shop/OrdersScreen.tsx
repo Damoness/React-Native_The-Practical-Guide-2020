@@ -11,9 +11,22 @@ import Colors from "../../constants/Colors";
 const OrdersScreen: NavigationStackScreenComponent = () => {
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isRefreshing,setIsRefreshing] = useState(false);
   const orders = useSelector((state: AppState) => state.order.orders);
   const dispatch = useDispatch();
   console.log("OrdersScreen");
+
+
+  const loadOrdersHandler = async ()=>{
+
+      setIsRefreshing(true);
+
+      await dispatch(fetchOrders());
+
+      setIsRefreshing(false);
+
+  }
+
 
   useEffect(() => {
     setIsLoading(true);
@@ -35,6 +48,8 @@ const OrdersScreen: NavigationStackScreenComponent = () => {
 
   return (
     <FlatList 
+        refreshing={isRefreshing}
+        onRefresh={loadOrdersHandler}
         data={orders}
         renderItem={({item,index})=><OrderItem order={item} />}
         keyExtractor={(item)=>item.id}

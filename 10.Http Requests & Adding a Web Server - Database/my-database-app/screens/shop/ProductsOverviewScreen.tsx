@@ -17,14 +17,14 @@ const ProductsOverviewScreen:NavigationStackScreenComponent= (props) => {
     const dispatch = useDispatch();
 
     const [isLoading, setIsLoading] = useState(false)
+    const [isRefreshing, setIsRefreshing] = useState(false)
     const [error, setError] = useState(null);
-
 
     
     const loadProducts = useCallback (async ()=>{
 
         setError(null);
-        setIsLoading(true);
+        setIsRefreshing(true);
 
         try {
 
@@ -36,7 +36,7 @@ const ProductsOverviewScreen:NavigationStackScreenComponent= (props) => {
 
         }finally{
 
-            setIsLoading(false);
+            setIsRefreshing(false);
 
         }
 
@@ -55,7 +55,10 @@ const ProductsOverviewScreen:NavigationStackScreenComponent= (props) => {
 
     useEffect(() => {
 
-        loadProducts();
+        setIsLoading(true);
+        loadProducts().then(() => {
+          setIsLoading(false);
+        });
 
     },[dispatch,loadProducts])
 
@@ -84,6 +87,10 @@ const ProductsOverviewScreen:NavigationStackScreenComponent= (props) => {
     return (
         <View style={styles.container}>
            <FlatList
+            style={{flex:1}}
+            automaticallyAdjustContentInsets={false}
+            refreshing={isRefreshing}
+            onRefresh={loadProducts}
             data={products}
             renderItem={({item,index})=>{
                 return (
