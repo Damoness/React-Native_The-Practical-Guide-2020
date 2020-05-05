@@ -1,5 +1,5 @@
 import Product from "../../models/product";
-import { ADD_TO_CART, DELETE_FROM_CART ,DeleteFromCartAction, CartState, ORDER_CART} from "./types";
+import { ADD_TO_CART, DELETE_FROM_CART ,DeleteFromCartAction, CartState} from "./types";
 
 export function addToCart(product:Product){
 
