@@ -16,7 +16,7 @@ const OrderItem: React.FC<Props> = ({ order }) => {
     <Card>
       <View style={styles.totalsContainer}>
         <Text style={styles.totalAmount}>${order.totals.toFixed(2)}</Text>
-        <Text style={styles.date}>{order.time}</Text>
+        <Text style={styles.date}>{order.readableDate}</Text>
       </View>
       <Button
         color={Colors.masterColor}

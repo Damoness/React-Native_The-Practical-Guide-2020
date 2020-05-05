@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text, Button, StyleSheet, ScrollView, ColorPropType } from "react-native";
+import React ,{useState} from "react";
+import { View, Text, Button, StyleSheet, ScrollView, ColorPropType, ActivityIndicator } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { AppState } from "../../store";
 import { deleteFromCart} from "../../store/cart/actions";
@@ -13,6 +13,16 @@ const CartScreen = () => {
   const cart = useSelector((state: AppState) => state.cart);
   const dispatch = useDispatch();
 
+  const [isLoading, setIsLoading] = useState(false)
+
+  const sendOrderHandler = async() => {
+
+      setIsLoading(true);
+      await dispatch(addOrder(cart));
+      setIsLoading(false);
+      
+  }
+
   const { items, totals } = cart;
   return (
     <View style={styles.container}>
@@ -21,14 +31,16 @@ const CartScreen = () => {
           Total: 
           <Text style={styles.amount}> ${totals.toFixed(2)}</Text>
         </Text>
-        <Button
-          title={"ORDER NOW"}
-          color={Colors.accentColor}
-          disabled={cart.totals == 0}
-          onPress={() => {
-            dispatch(addOrder(cart));
-          }}
-        />
+        {
+          isLoading ?
+          <ActivityIndicator size="small" color={Colors.masterColor} />:
+          <Button
+            title={"ORDER NOW"}
+            color={Colors.accentColor}
+            disabled={cart.totals == 0}
+            onPress={sendOrderHandler}
+          />
+        }
       </Card>
       <ScrollView style={styles.productsContainer}>
         {items.map((item) => {

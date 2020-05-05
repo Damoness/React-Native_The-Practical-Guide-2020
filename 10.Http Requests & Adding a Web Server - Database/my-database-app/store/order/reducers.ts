@@ -1,7 +1,7 @@
-import { OrderState, OrderAction, ADD_ORDER } from "./types";
+import { OrderState, OrderAction, ADD_ORDER, SET_ORDERS } from "./types";
 import Order from "../../models/order";
 
-const moment = require('moment');
+
 
 const initialState: OrderState = {
   orders: [],
@@ -17,13 +17,21 @@ export function orderReducer(
         action.data.id,
         action.data.items,
         action.data.totals,
-        moment(action.data.date).format("MMMM Do YYYY, hh:mm:ss"),
+        action.data.date,
       );
 
       return {
           ...state,
           orders:state.orders.concat(newOrder)
       }
+    }
+    case SET_ORDERS:{
+
+      return {
+        ...state,
+        orders:action.data
+      }
+
     }
     default: {
       return state;
