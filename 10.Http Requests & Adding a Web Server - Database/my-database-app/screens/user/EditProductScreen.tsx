@@ -1,11 +1,20 @@
-import React, { useEffect, useCallback, useReducer } from "react";
-import { View, StyleSheet, Alert, KeyboardAvoidingView,Platform,ScrollView} from "react-native";
+import React, { useEffect, useCallback, useReducer, useState } from "react";
+import {
+  View,
+  StyleSheet,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 import Product from "../../models/product";
 import HeaderItem from "../../components/UI/HeaderItem";
 import { useDispatch } from "react-redux";
 import { updateProduct, addProduct } from "../../store/product/actions";
 import Input from "../../components/UI/Input";
+import Colors from "../../constants/Colors";
 
 type Params = {
   product?: Product;
@@ -100,13 +109,16 @@ const EditProductScreen: NavigationStackScreenComponent<Params> = (props) => {
 
   const [formState, dispatchFormState] = useReducer(formReducer, initialState);
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Object|null>(null);
+
   //console.log(formState);
 
   const {
     inputValues: { title, imageUrl, description, price },
   } = formState;
 
-  const submitHandler = useCallback(() => {
+  const submitHandler = useCallback(async () => {
     //console.log(formState);
 
     if (!formState.formIsValid) {
@@ -114,24 +126,32 @@ const EditProductScreen: NavigationStackScreenComponent<Params> = (props) => {
       return;
     }
 
-    if (product) {
-      dispatch(
-        updateProduct(
-          new Product(product.id, "u1", title, imageUrl, description, price)
-        )
-      );
-    } else {
-      dispatch(
-        addProduct(
-            title,
-            imageUrl,
-            price,
-            description,
-        )
-      );
+    try {
+
+      setError(null);
+      setIsLoading(true)
+
+      if (product) {
+        await dispatch(
+          updateProduct(
+            new Product(product.id, "u1", title, imageUrl, description, price)
+          )
+        );
+      } else {
+       await dispatch(addProduct(title, imageUrl, price, description));
+      }
+
+      setIsLoading(false)
+
+      props.navigation.goBack();
+      
+    } catch (error) {
+      
+      setError(error);
+
     }
 
-    props.navigation.goBack();
+    
   }, [dispatch, title, imageUrl, description, price]);
 
   useEffect(() => {
@@ -142,7 +162,6 @@ const EditProductScreen: NavigationStackScreenComponent<Params> = (props) => {
 
   const inputChangeHandler = useCallback(
     (inputIdentifier, inputValue, inputValidity) => {
-
       //console.log('inputChangeHandler:',inputIdentifier,inputValue,inputValidity);
 
       dispatchFormState({
@@ -157,15 +176,35 @@ const EditProductScreen: NavigationStackScreenComponent<Params> = (props) => {
     [dispatchFormState]
   );
 
+
+  useEffect(()=>{
+
+    if(error){
+      Alert.alert('An error occurred',JSON.stringify(error));
+    }
+
+  },[error])
+
+
+  if(isLoading){
+    return(
+      <View style={styles.centered} >
+        <ActivityIndicator size={'large'} color={Colors.masterColor}/>
+      </View>
+    )
+  }
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS == "ios" ? "padding" : undefined}
       keyboardVerticalOffset={100}
-      style={{flex:1}}
+      style={{ flex: 1 }}
     >
-      <ScrollView onLayout={(event)=>{
-        console.log(event.nativeEvent.layout)
-      }}>
+      <ScrollView
+        onLayout={(event) => {
+          console.log(event.nativeEvent.layout);
+        }}
+      >
         <View style={styles.container}>
           <Input
             id={"title"}
@@ -232,6 +271,11 @@ const styles = StyleSheet.create({
     borderBottomColor: "#ccc",
     borderBottomWidth: 1,
   },
+  centered:{
+    flex:1,
+    alignItems:'center',
+    justifyContent:'center',
+  }
 });
 
 EditProductScreen.navigationOptions = (props) => {
