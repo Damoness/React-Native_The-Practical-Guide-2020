@@ -11,9 +11,12 @@ export function fetchProducts(){
 
     console.log('fetchProducts');
 
-    return async (dispatch:any)=>{
+    return async (dispatch:any,getState:getState)=>{
 
         try {
+
+
+            const {userId} = getState().auth
 
             const resJson =  await HttpUtils.GET(PRODUCTS_URL)
 
@@ -21,8 +24,8 @@ export function fetchProducts(){
     
             for(let key in resJson){
     
-                const {title,imageUrl,price,description} = resJson[key];
-                const product = new Product(key,'u1',title,imageUrl,description,price);
+                const {title,imageUrl,price,description,userId} = resJson[key];
+                const product = new Product(key,userId,title,imageUrl,description,price);
                 products.push(product)
 
             }
@@ -31,7 +34,10 @@ export function fetchProducts(){
     
             dispatch({
                 type:SET_PRODUCTS,
-                data:products,
+                data:{
+                    products,
+                    userProducts:products.filter(product=>product.userId == userId)
+                },
             })
 
             
@@ -58,6 +64,7 @@ export function addProduct(title:string,imageUrl:string,price:number,description
             imageUrl,
             price,
             description,
+            userId,
         })
 
         console.log(resJson);
@@ -65,7 +72,7 @@ export function addProduct(title:string,imageUrl:string,price:number,description
 
         dispatch({
             type:ADD_PRODUCT,
-            data:new Product(id,'u1',title,imageUrl,description,price),
+            data:new Product(id,userId!,title,imageUrl,description,price),
         })
 
     }

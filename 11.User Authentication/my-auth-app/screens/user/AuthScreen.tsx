@@ -115,10 +115,10 @@ const AuthScreen:NavigationStackScreenComponent = (props) => {
         }else {
     
             await  dispatch(login(formState.inputValues.email,formState.inputValues.password))
-
-            props.navigation.navigate('App')
-    
+            
         }
+
+        props.navigation.navigate('App')
         
     } catch (error) {
 

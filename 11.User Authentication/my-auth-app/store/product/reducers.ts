@@ -3,8 +3,8 @@ import { ProductAction ,ProductState, DELETE_PRODUCT, UPDATE_PRODUCT, ADD_PRODUC
 
 
 const initialState:ProductState={
-    availableProducts:allProducts,
-    userProducts:allProducts.filter(product=>product.userId == 'u1'),
+    availableProducts:[],
+    userProducts:[],
 }
 
 
@@ -60,8 +60,8 @@ export function productReducer(state = initialState,action:ProductAction):Produc
         case SET_PRODUCTS:{
 
             return{
-                availableProducts:action.data,
-                userProducts:action.data.filter(product=>product.userId == 'u1')
+                availableProducts:action.data.products,
+                userProducts:action.data.userProducts
             }
 
         }

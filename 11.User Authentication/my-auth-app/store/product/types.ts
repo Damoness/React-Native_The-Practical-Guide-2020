@@ -15,7 +15,10 @@ export interface ProductState{
 
 export interface SetProductsAction{
     type:typeof SET_PRODUCTS
-    data:Array<Product>
+    data:{
+        products:Array<Product>,
+        userProducts:Array<Product>,
+    }
 }
 export interface AddProductAction{
      type:typeof ADD_PRODUCT
