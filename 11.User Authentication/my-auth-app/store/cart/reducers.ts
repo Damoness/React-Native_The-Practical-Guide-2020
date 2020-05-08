@@ -1,4 +1,4 @@
-import { CartState, CartAction, ADD_TO_CART, DELETE_FROM_CART, ORDER_CART } from "./types";
+import { CartState, CartAction, ADD_TO_CART, DELETE_FROM_CART} from "./types";
 import CartItem from "../../models/cart-item";
 import { DELETE_PRODUCT } from "../product/types";
 import { ADD_ORDER } from "../order/types";

@@ -1,5 +1,5 @@
 import React ,{useState} from "react";
-import { View, Text, Button, StyleSheet, ScrollView, ColorPropType, ActivityIndicator } from "react-native";
+import { View, Text, Button, StyleSheet, ScrollView, ColorPropType, ActivityIndicator, Alert } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { AppState } from "../../store";
 import { deleteFromCart} from "../../store/cart/actions";
@@ -17,9 +17,21 @@ const CartScreen = () => {
 
   const sendOrderHandler = async() => {
 
+
+    try {
+
       setIsLoading(true);
       await dispatch(addOrder(cart));
       setIsLoading(false);
+      
+    } catch (error) {
+      
+      Alert.alert(error.message);
+      setIsLoading(false);
+
+    }
+
+
       
   }
 

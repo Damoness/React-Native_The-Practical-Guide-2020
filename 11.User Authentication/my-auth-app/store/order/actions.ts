@@ -1,8 +1,7 @@
 import { ADD_ORDER, SET_ORDERS } from "./types";
 import { CartState } from "../cart/types";
 import Order from "../../models/order";
-
-const ORDERS_URL = "https://rn-complete-guide-c0db7.firebaseio.com/orders.json";
+import HttpUtils from "../../utils/HttpUtils";
 
 
 export function fetchOrders(){
@@ -15,9 +14,7 @@ export function fetchOrders(){
 
       const url = `https://rn-complete-guide-c0db7.firebaseio.com/orders/${userId}.json`;
 
-      const response = await fetch(url);
-
-      const resJson = await response.json();
+      const resJson = await HttpUtils.GET(url);
 
       let orders:Array<Order> = [];
 
@@ -42,7 +39,7 @@ export function fetchOrders(){
       })
       
     } catch (error) {
-      
+      throw error;
     }
 
   }
@@ -57,29 +54,13 @@ export function addOrder(data: CartState) {
     const url = `https://rn-complete-guide-c0db7.firebaseio.com/orders/${userId}.json?auth=${token}`;
 
     try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            items:data.items,
-            totals:data.totals,
-            date:date.toISOString(),
-        }),
-      });
 
-      if (!response.ok) {
-
-        const resJson = await response.json();
-        console.log(resJson);
-        throw new Error('Something went wrong!');
-      }
-
-      const resJson = await response.json();
-
-      console.log(resJson);
-
+      const resJson =  await HttpUtils.POST(url,{            
+        items:data.items,
+        totals:data.totals,
+        date:date.toISOString()
+      })
+  
       dispatch({
         type: ADD_ORDER,
         data: {
@@ -90,6 +71,10 @@ export function addOrder(data: CartState) {
         },
       });
 
-    } catch (error) {}
+    } catch (error) {
+
+       throw error;
+
+    }
   };
 }

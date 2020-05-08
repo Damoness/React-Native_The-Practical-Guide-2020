@@ -73,8 +73,8 @@ const AuthScreen:NavigationStackScreenComponent = (props) => {
 
     const initialState:AuthState={
         inputValues:{
-            email:'',
-            password:'',
+            email:'12345678@qq.com',
+            password:'12345678',
         },
         inputValidities:{
             email:false,
@@ -137,7 +137,7 @@ const AuthScreen:NavigationStackScreenComponent = (props) => {
             <Input
                 id={"email"}
                 label={"Email"}
-                initialValue={""}
+                initialValue={formState.inputValues.email}
                 initiallyValid={false}
                 errorText={"Please enter a valid email"}
                 onInputChange={inputChangeHandler}
@@ -147,9 +147,10 @@ const AuthScreen:NavigationStackScreenComponent = (props) => {
                 autoCorrect={false}
             />
             <Input
+                secureTextEntry
                 id={"password"}
                 label={"Password"}
-                initialValue={""}
+                initialValue={formState.inputValues.password}
                 initiallyValid={false}
                 errorText={"Please enter a valid password"}
                 onInputChange={inputChangeHandler}

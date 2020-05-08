@@ -19,9 +19,19 @@ const UserProductsScreen:NavigationStackScreenComponent = (props) => {
           {
             text: 'Yes',
             style: 'destructive',
-            onPress: () => {
+            onPress: async () => {
 
-                dispatch(deleteProduct(id))
+                try {
+
+                   await dispatch(deleteProduct(id))
+                    
+                } catch (error) {
+                    
+                    Alert.alert(error.message)
+
+                }
+
+                
             }
           }
         ]);
@@ -34,7 +44,7 @@ const UserProductsScreen:NavigationStackScreenComponent = (props) => {
                 <Text>No product found,maybe start creating some ?</Text>
             </View>
         )
-        
+
      }
 
     return (

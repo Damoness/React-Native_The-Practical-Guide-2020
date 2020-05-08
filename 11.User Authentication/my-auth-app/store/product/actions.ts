@@ -1,7 +1,11 @@
 import { ADD_PRODUCT, DELETE_PRODUCT ,DeleteProductAction,UpdateProductAction, UPDATE_PRODUCT,AddProductAction, SET_PRODUCTS} from "./types";
 import Product from "../../models/product";
+import HttpUtils from "../../utils/HttpUtils";
+import { AppState } from "..";
 
 const PRODUCTS_URL = 'https://rn-complete-guide-c0db7.firebaseio.com/products.json';
+
+type getState = ()=>AppState
 
 export function fetchProducts(){
 
@@ -11,15 +15,7 @@ export function fetchProducts(){
 
         try {
 
-            const response =  await fetch(PRODUCTS_URL)
-
-            if(!response.ok){
-                throw new Error('Something went wrong')
-            }
-
-            const resJson = await response.json();
-
-            console.log(resJson);
+            const resJson =  await HttpUtils.GET(PRODUCTS_URL)
 
             const products = [];
     
@@ -28,6 +24,7 @@ export function fetchProducts(){
                 const {title,imageUrl,price,description} = resJson[key];
                 const product = new Product(key,'u1',title,imageUrl,description,price);
                 products.push(product)
+
             }
     
             console.log(products);
@@ -50,41 +47,18 @@ export function fetchProducts(){
 export function addProduct(title:string,imageUrl:string,price:number,description:string){
 
     
-    return async (dispatch:any,getState:any)=>{
+    return async (dispatch:any,getState:getState)=>{
 
-
-        const {auth:{token}} = getState();
+        const {auth:{token,userId}} = getState();
 
         const url = `https://rn-complete-guide-c0db7.firebaseio.com/products.json?auth=${token}`;
 
-        const response =  await fetch(url,{
-            method:'POST',
-            headers:{
-                'Content-Type':'application/json'
-            },
-            body:JSON.stringify({
-                title,
-                imageUrl,
-                price,
-                description,
-            })
+        const resJson =  await HttpUtils.POST(url,{
+            title,
+            imageUrl,
+            price,
+            description,
         })
-
-
-        if(!response.ok){
-
-            const json = await response.json()
-
-            console.log('json',json);
-
-            if(json.error){
-                throw new Error(json.error);
-            }else{
-                throw new Error('Something went wrong');
-            }
-        }
-        
-        const resJson = await response.json();
 
         console.log(resJson);
         const id = resJson.name;
@@ -101,12 +75,7 @@ export function addProduct(title:string,imageUrl:string,price:number,description
 
 export function deleteProduct(productId:string){
 
-
-    
-
-
-    return  async (dispatch:any,getState:any)=>{
-
+    return  async (dispatch:any,getState:getState)=>{
 
         const {auth:{token}} = getState();
 
@@ -114,22 +83,7 @@ export function deleteProduct(productId:string){
 
         try {
 
-            const response = await fetch(url,{
-                method:'DELETE'
-            })
-
-            if(!response.ok){
-
-                const json = await response.json()
-
-                console.log('json',json);
-
-                if(json.error){
-                    throw new Error(json.error);
-                }else{
-                    throw new Error('Something went wrong');
-                }
-            }
+            await HttpUtils.DELETE(url)
 
             dispatch({
                 type:DELETE_PRODUCT,
@@ -152,43 +106,22 @@ export function updateProduct(product:Product){
 
 
 
-    return async (dispatch:any,getState:any)=>{
+    return async (dispatch:any,getState:getState)=>{
 
 
         const {auth:{token}} = getState();
 
         const url = `https://rn-complete-guide-c0db7.firebaseio.com/products/${product.id}.json?auth=${token}`;
 
-        console.log('updateProduct',product)
-
         try {
 
-            console.log();
 
-            const response = await fetch(url,{
-                method:'PATCH',
-                body:JSON.stringify(product)
-            })
-
-            if(!response.ok){
-
-                const json = await response.json()
-
-                console.log('json',json);
-
-                if(json.error){
-                    throw new Error(json.error);
-                }else{
-                    throw new Error('Something went wrong');
-                }
-                
-            }
+            await HttpUtils.PATCH(url,product)
 
             dispatch({
                 type:UPDATE_PRODUCT,
                 data:product,
             })
-
             
         } catch (error) {
     
