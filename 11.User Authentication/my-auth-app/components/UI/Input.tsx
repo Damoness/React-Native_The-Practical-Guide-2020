@@ -16,7 +16,8 @@ type Props = {
     initiallyValid:boolean,
 
 
-    required:boolean,
+    email?:boolean,
+    required?:boolean,
     minLength?:number,
     min?:number,
     max?:number,
@@ -87,8 +88,15 @@ const Input: React.FC<Props> = (props) => {
 
     let isValid = true;
 
+
     if(props.required && text.trim().length == 0){
         isValid = false
+    }
+
+  
+    if(props.email!=null &&  !/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/.test(text)){
+
+        isValid = false;
     }
 
     if(props.min!=null && +text < props.min){
@@ -107,7 +115,7 @@ const Input: React.FC<Props> = (props) => {
 
     }
 
-    console.log(text,isValid);
+    //console.log(text,isValid);
 
     dispatch({
         type:'INPUT_CHANGE',

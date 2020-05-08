@@ -50,9 +50,14 @@ export function fetchProducts(){
 export function addProduct(title:string,imageUrl:string,price:number,description:string){
 
     
-    return async (dispatch:any)=>{
+    return async (dispatch:any,getState:any)=>{
 
-        const response =  await fetch(PRODUCTS_URL,{
+
+        const {auth:{token}} = getState();
+
+        const url = `https://rn-complete-guide-c0db7.firebaseio.com/products.json?auth=${token}`;
+
+        const response =  await fetch(url,{
             method:'POST',
             headers:{
                 'Content-Type':'application/json'
@@ -64,6 +69,20 @@ export function addProduct(title:string,imageUrl:string,price:number,description
                 description,
             })
         })
+
+
+        if(!response.ok){
+
+            const json = await response.json()
+
+            console.log('json',json);
+
+            if(json.error){
+                throw new Error(json.error);
+            }else{
+                throw new Error('Something went wrong');
+            }
+        }
         
         const resJson = await response.json();
 
@@ -72,7 +91,7 @@ export function addProduct(title:string,imageUrl:string,price:number,description
 
         dispatch({
             type:ADD_PRODUCT,
-            data:new Product(id,'u2',title,imageUrl,description,price),
+            data:new Product(id,'u1',title,imageUrl,description,price),
         })
 
     }
@@ -83,11 +102,15 @@ export function addProduct(title:string,imageUrl:string,price:number,description
 export function deleteProduct(productId:string){
 
 
-    const url = `https://rn-complete-guide-c0db7.firebaseio.com/products/${productId}.json`;
+    
 
 
-    return  async (dispatch:any)=>{
+    return  async (dispatch:any,getState:any)=>{
 
+
+        const {auth:{token}} = getState();
+
+        const url = `https://rn-complete-guide-c0db7.firebaseio.com/products/${productId}.json?auth=${token}`;
 
         try {
 
@@ -96,7 +119,16 @@ export function deleteProduct(productId:string){
             })
 
             if(!response.ok){
-                throw new Error('Something went wrong');
+
+                const json = await response.json()
+
+                console.log('json',json);
+
+                if(json.error){
+                    throw new Error(json.error);
+                }else{
+                    throw new Error('Something went wrong');
+                }
             }
 
             dispatch({
@@ -118,14 +150,20 @@ export function deleteProduct(productId:string){
 
 export function updateProduct(product:Product){
 
-    const url = `https://rn-complete-guide-c0db7.firebaseio.com/products/${product.id}.json`;
 
-    console.log('updateProduct',product)
 
-    return async (dispatch:any)=>{
+    return async (dispatch:any,getState:any)=>{
 
+
+        const {auth:{token}} = getState();
+
+        const url = `https://rn-complete-guide-c0db7.firebaseio.com/products/${product.id}.json?auth=${token}`;
+
+        console.log('updateProduct',product)
 
         try {
+
+            console.log();
 
             const response = await fetch(url,{
                 method:'PATCH',
@@ -133,7 +171,17 @@ export function updateProduct(product:Product){
             })
 
             if(!response.ok){
-                throw new Error('Something went wrong');
+
+                const json = await response.json()
+
+                console.log('json',json);
+
+                if(json.error){
+                    throw new Error(json.error);
+                }else{
+                    throw new Error('Something went wrong');
+                }
+                
             }
 
             dispatch({
@@ -143,7 +191,7 @@ export function updateProduct(product:Product){
 
             
         } catch (error) {
-            
+    
             throw error;
 
         }

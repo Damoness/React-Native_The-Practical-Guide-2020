@@ -20,6 +20,7 @@ const UserProductsScreen:NavigationStackScreenComponent = (props) => {
             text: 'Yes',
             style: 'destructive',
             onPress: () => {
+
                 dispatch(deleteProduct(id))
             }
           }

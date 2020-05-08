@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import { updateProduct, addProduct } from "../../store/product/actions";
 import Input from "../../components/UI/Input";
 import Colors from "../../constants/Colors";
+import { hasKey } from "../../utils/ts-utils";
 
 type Params = {
   product?: Product;
@@ -46,9 +47,7 @@ type TestAction = {
   };
 };
 
-function hasKey<O>(obj: O, key: keyof any): key is keyof O {
-  return key in obj;
-}
+
 
 function formReducer(state: TestState, action: TestAction): TestState {
   switch (action.type) {
@@ -110,7 +109,7 @@ const EditProductScreen: NavigationStackScreenComponent<Params> = (props) => {
   const [formState, dispatchFormState] = useReducer(formReducer, initialState);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Object|null>(null);
+  const [error, setError] = useState<string|null>(null);
 
   //console.log(formState);
 
@@ -141,13 +140,15 @@ const EditProductScreen: NavigationStackScreenComponent<Params> = (props) => {
        await dispatch(addProduct(title, imageUrl, +price, description));
       }
 
+
       setIsLoading(false)
 
       props.navigation.goBack();
       
     } catch (error) {
       
-      setError(error);
+      setIsLoading(false)
+      setError(error.message);
 
     }
 
@@ -180,7 +181,7 @@ const EditProductScreen: NavigationStackScreenComponent<Params> = (props) => {
   useEffect(()=>{
 
     if(error){
-      Alert.alert('An error occurred',JSON.stringify(error));
+      Alert.alert('An error occurred',error);
     }
 
   },[error])
