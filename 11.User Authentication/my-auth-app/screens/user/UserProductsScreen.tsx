@@ -10,7 +10,7 @@ import HeaderItem from '../../components/UI/HeaderItem'
 
 const UserProductsScreen:NavigationStackScreenComponent = (props) => {
 
-    const products = useSelector((state:AppState) => state.product.userProducts);
+    const userProducts = useSelector((state:AppState) => state.product.userProducts);
     const dispatch = useDispatch();
 
     const deleteHandler = (id:string) => {
@@ -27,10 +27,20 @@ const UserProductsScreen:NavigationStackScreenComponent = (props) => {
         ]);
      };
 
+     if(userProducts.length == 0){
+
+        return (
+            <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
+                <Text>No product found,maybe start creating some ?</Text>
+            </View>
+        )
+        
+     }
+
     return (
         <View style={styles.container}>
-           <FlatList 
-            data={products}
+           <FlatList
+            data={userProducts}
             renderItem={({item,index})=>{
                 return (
                     <ProductItem 

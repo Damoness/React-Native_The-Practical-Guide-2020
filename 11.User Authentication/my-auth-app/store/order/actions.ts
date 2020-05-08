@@ -7,11 +7,15 @@ const ORDERS_URL = "https://rn-complete-guide-c0db7.firebaseio.com/orders.json";
 
 export function fetchOrders(){
 
-  return async (dispatch:any)=>{
+  return async (dispatch:any,getState:any)=>{
+
+    const userId = getState().auth.userId;
 
     try {
 
-      const response = await fetch(ORDERS_URL);
+      const url = `https://rn-complete-guide-c0db7.firebaseio.com/orders/${userId}.json`;
+
+      const response = await fetch(url);
 
       const resJson = await response.json();
 
@@ -46,19 +50,31 @@ export function fetchOrders(){
 }
 
 export function addOrder(data: CartState) {
-  return async (dispatch: any) => {
+  return async (dispatch: any,getState:any) => {
 
+    const {userId,token} = getState().auth;
     const date = new Date();
+    const url = `https://rn-complete-guide-c0db7.firebaseio.com/orders/${userId}.json?auth=${token}`;
 
     try {
-      const response = await fetch(ORDERS_URL, {
+      const response = await fetch(url, {
         method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify({
             items:data.items,
             totals:data.totals,
             date:date.toISOString(),
         }),
       });
+
+      if (!response.ok) {
+
+        const resJson = await response.json();
+        console.log(resJson);
+        throw new Error('Something went wrong!');
+      }
 
       const resJson = await response.json();
 

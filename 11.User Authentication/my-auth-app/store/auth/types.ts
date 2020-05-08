@@ -9,7 +9,7 @@ export interface AuthState{
 export interface AuthorizationAction{
     type:typeof AUTHORIZATION,
     token:string,
-    useId:string,
+    userId:string,
 }
 
 

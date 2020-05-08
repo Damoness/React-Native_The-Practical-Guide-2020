@@ -16,7 +16,7 @@ export function authReducer(state = initialState,action:AuthorizationAction):Aut
         case AUTHORIZATION:{
             return{
                 token:action.token,
-                userId:action.useId,
+                userId:action.userId,
             }
         }
 

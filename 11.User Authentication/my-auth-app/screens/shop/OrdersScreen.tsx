@@ -1,5 +1,5 @@
 import React,{useEffect,useState} from "react";
-import {FlatList,View,ActivityIndicator,StyleSheet} from "react-native";
+import {FlatList,View,ActivityIndicator,StyleSheet,Text} from "react-native";
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 import HeaderMenu from "../../components/UI/HeaderMenu";
 import {useSelector, useDispatch } from "react-redux";
@@ -44,6 +44,16 @@ const OrdersScreen: NavigationStackScreenComponent = () => {
       </View>
     );
   }
+
+  if(orders.length == 0){
+
+    return (
+        <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
+            <Text>No order found,maybe start ordering some products?</Text>
+        </View>
+    )
+    
+ }
 
 
   return (
