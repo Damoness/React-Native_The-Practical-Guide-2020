@@ -13,6 +13,7 @@ import {Ionicons} from '@expo/vector-icons'
 import React from 'react'
 import { StackNavigationOptions } from 'react-navigation-stack/lib/typescript/src/vendor/types';
 import AuthScreen from '../screens/user/AuthScreen';
+import StartupScreen from '../screens/StartupScreen';
 
 
 const defaultNavigationOptions:StackNavigationOptions ={
@@ -96,6 +97,7 @@ const AuthNavigator = createStackNavigator({
 
 
 const mainNavigator = createSwitchNavigator({
+    Startup:StartupScreen,
     Auth:AuthNavigator,
     App:drawerNavigator,
 })

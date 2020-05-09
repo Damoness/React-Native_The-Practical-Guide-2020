@@ -1,4 +1,4 @@
-import { AuthState, AuthorizationAction, AUTHORIZATION } from "./types";
+import { AuthState, AuthorizationAction, AUTHORIZATION, LOGOUT, AuthAction } from "./types";
 
 
 
@@ -8,7 +8,7 @@ const initialState:AuthState = {
 }
 
 
-export function authReducer(state = initialState,action:AuthorizationAction):AuthState{
+export function authReducer(state = initialState,action:AuthAction):AuthState{
 
 
     switch(action.type){
@@ -18,6 +18,9 @@ export function authReducer(state = initialState,action:AuthorizationAction):Aut
                 token:action.token,
                 userId:action.userId,
             }
+        }
+        case LOGOUT:{
+            return initialState;
         }
 
     }
