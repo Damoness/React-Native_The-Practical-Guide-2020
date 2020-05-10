@@ -6,8 +6,6 @@ import { authenticate } from '../store/auth/actions'
 
 const StartupScreen:NavigationSwitchScreenComponent = (props) => {
 
-    
-
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -26,11 +24,15 @@ const StartupScreen:NavigationSwitchScreenComponent = (props) => {
 
                 if(expirationDate < new Date()){
 
+                    console.log('Auth');
                     props.navigation.navigate('Auth')
 
                 }else{
 
-                    dispatch(authenticate(userId,token));
+                    const expirationTime = expirationDate.getTime() - new Date().getTime();
+
+                    console.log('App');
+                    dispatch(authenticate(userId,token,expirationTime));
                     props.navigation.navigate('App')
 
                 }

@@ -22,24 +22,35 @@ export function login(email: string, password: string) {
 
     const { idToken: token, localId: userId, expiresIn } = resJson;
 
+
+    const expiryTime = parseInt(expiresIn) * 1000;
+
     const expireDate = new Date(
-      new Date().getTime() + parseInt(expiresIn) * 1000
+      new Date().getTime() + expiryTime
     );
 
     saveDateToStorage(token, userId, expireDate);
 
-    dispatch(authenticate(userId, token));
+    dispatch(authenticate(userId, token,expiryTime));
   };
 }
 
 export function authenticate(
   userId: string,
-  token: string
-): AuthorizationAction {
-  return { type: AUTHORIZATION, userId: userId, token: token };
+  token: string,
+  expiryTime:number
+) {
+  return (dispatch:any)=>{
+
+     dispatch(setLogoutTimeout(expiryTime));
+     dispatch({ type: AUTHORIZATION, userId: userId, token: token });
+    
+  }
 }
 
 export function logOut(): LogoutAction {
+
+  AsyncStorage.removeItem('userData');
   return {
     type: LOGOUT,
   };
@@ -58,12 +69,41 @@ export function signUp(email: string, password: string) {
 
     console.log(resJson);
 
-    dispatch({
-      type: AUTHORIZATION,
-      token: resJson.idToken,
-      userId: resJson.localId,
-    });
+    const { idToken: token, localId: userId, expiresIn } = resJson;
+
+
+    const expiryTime = parseInt(expiresIn) * 1000;
+
+
+    const expireDate = new Date(
+      new Date().getTime() + expiryTime
+    );
+
+    saveDateToStorage(token, userId, expireDate);
+
+    dispatch(authenticate(userId, token,expiryTime));
+
   };
+}
+
+let timer:number;
+
+const setLogoutTimeout = (expirationTime:number)=>{
+
+  return (dispatch:any)=>{
+
+    timer =  setTimeout(()=>{
+
+      dispatch(logOut())
+
+    },expirationTime)
+
+  }
+
+}
+
+const clearLoggerTimeout = ()=>{
+   timer && clearTimeout(timer);
 }
 
 const saveDateToStorage = (
