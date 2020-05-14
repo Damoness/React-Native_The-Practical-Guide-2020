@@ -18,10 +18,15 @@
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
-      "**/*"
+      "assets/images/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.damoness.greatPlaces",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "com.damoness.greatPlaces",
+      "versionCode": 1
     },
     "description": ""
   }
