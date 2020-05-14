@@ -49,7 +49,9 @@ const LocationPicker = (props:Props) => {
       }, [mapPickedLocation, onLocationPicked]);
 
     const pickOnMapHandler= ()=>{
-        props.navigation.push('Map')
+        props.navigation.push('Map',{
+          
+        })
     }
 
     const getLocationHandler = async () => {

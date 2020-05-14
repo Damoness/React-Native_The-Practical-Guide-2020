@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
       },
     headerButtonText: {
         fontSize: 16,
-        color: Platform.OS === 'android' ? 'white' : Colors.primary
+        color: Colors.primary
     }
 })
 
