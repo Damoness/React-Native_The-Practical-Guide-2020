@@ -1,10 +1,9 @@
 import React,{useEffect} from 'react'
 import { View, Text, AsyncStorage } from 'react-native'
-import { NavigationSwitchScreenComponent } from 'react-navigation'
 import { useDispatch } from 'react-redux'
-import { authenticate } from '../store/auth/actions'
+import { setDidTryAutoLogin ,authenticate} from '../store/auth/actions'
 
-const StartupScreen:NavigationSwitchScreenComponent = (props) => {
+const StartupScreen = () => {
 
     const dispatch = useDispatch();
 
@@ -25,7 +24,7 @@ const StartupScreen:NavigationSwitchScreenComponent = (props) => {
                 if(expirationDate < new Date()){
 
                     console.log('Auth');
-                    props.navigation.navigate('Auth')
+                    dispatch(setDidTryAutoLogin());
 
                 }else{
 
@@ -33,13 +32,13 @@ const StartupScreen:NavigationSwitchScreenComponent = (props) => {
 
                     console.log('App');
                     dispatch(authenticate(userId,token,expirationTime));
-                    props.navigation.navigate('App')
-
+                    
                 }
 
            }else{
 
-                props.navigation.navigate('Auth')
+                //props.navigation.navigate('Auth')
+                dispatch(setDidTryAutoLogin());
 
            }
         }

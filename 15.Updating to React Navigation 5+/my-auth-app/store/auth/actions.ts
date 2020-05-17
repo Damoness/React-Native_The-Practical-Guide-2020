@@ -3,11 +3,17 @@ import {
   LogoutAction,
   LOGOUT,
   AuthorizationAction,
+  SET_DID_TRY_AUTO_LOGIN,
 } from "./types";
 import HttpUtils from "../../utils/HttpUtils";
 import { AsyncStorage } from "react-native";
 
-export function login(email: string, password: string) {
+/**
+ * 登录
+ * @param email 
+ * @param password 
+ */
+function login(email: string, password: string) {
   return async (dispatch: any) => {
     const url =
       "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAfhwcc-qnfmxtRlnVnOFyWqOU5LkF5X9A";
@@ -35,7 +41,13 @@ export function login(email: string, password: string) {
   };
 }
 
-export function authenticate(
+/**
+ * 授权
+ * @param userId 
+ * @param token 
+ * @param expiryTime 
+ */
+function authenticate(
   userId: string,
   token: string,
   expiryTime:number
@@ -48,15 +60,24 @@ export function authenticate(
   }
 }
 
-export function logOut(): LogoutAction {
-
+/**
+ * 登出
+ */
+function logOut(): LogoutAction {
+  
+  clearLogoutTimeout();
   AsyncStorage.removeItem('userData');
   return {
     type: LOGOUT,
   };
 }
 
-export function signUp(email: string, password: string) {
+/**
+ * 注册
+ * @param email 
+ * @param password 
+ */
+function signUp(email: string, password: string) {
   return async (dispatch: any) => {
     const url =
       "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAfhwcc-qnfmxtRlnVnOFyWqOU5LkF5X9A";
@@ -86,6 +107,10 @@ export function signUp(email: string, password: string) {
   };
 }
 
+const setDidTryAutoLogin = () => {
+  return { type: SET_DID_TRY_AUTO_LOGIN };
+};
+
 let timer:number;
 
 const setLogoutTimeout = (expirationTime:number)=>{
@@ -102,7 +127,7 @@ const setLogoutTimeout = (expirationTime:number)=>{
 
 }
 
-const clearLoggerTimeout = ()=>{
+const clearLogoutTimeout = ()=>{
    timer && clearTimeout(timer);
 }
 
@@ -116,3 +141,14 @@ const saveDateToStorage = (
     JSON.stringify({ token, userId, expiryDate:expirationDate.toISOString() })
   );
 };
+
+
+export {
+  logOut,
+  signUp,
+  login,
+  authenticate,
+  setDidTryAutoLogin
+}
+
+

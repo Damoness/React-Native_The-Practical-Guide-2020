@@ -1,7 +1,6 @@
 import React,{useEffect,useState, useCallback} from 'react'
 import { View,StyleSheet,FlatList,ActivityIndicator,Text, Button} from 'react-native'
 import ProductItem from '../../components/shop/ProductItem'
-import {NavigationStackScreenComponent} from 'react-navigation-stack'
 import { useSelector, useDispatch } from 'react-redux'
 import {AppState} from '../../store'
 import HeaderMenu from '../../components/UI/HeaderMenu'
@@ -9,8 +8,11 @@ import { addToCart } from '../../store/cart/actions'
 import HeaderItem from '../../components/UI/HeaderItem'
 import { fetchProducts } from '../../store/product/actions'
 import Colors from '../../constants/Colors'
+import { StackScreenProps } from '@react-navigation/stack'
+import { ProductsStackParamList } from '../../navigation/Navigator'
+type Props = StackScreenProps<ProductsStackParamList,'ProductsOverviewScreen'>
 
-const ProductsOverviewScreen:NavigationStackScreenComponent= (props) => {
+const ProductsOverviewScreen = (props:Props) => {
 
 
     const products = useSelector((state:AppState) => state.product.availableProducts);
@@ -45,10 +47,10 @@ const ProductsOverviewScreen:NavigationStackScreenComponent= (props) => {
 
     useEffect(()=>{
 
-         const willFocusSub =  props.navigation.addListener('willFocus',loadProducts);
+           props.navigation.addListener('focus',loadProducts);
 
          return ()=>{
-            willFocusSub.remove();
+            props.navigation.removeListener('focus',loadProducts);
          }
 
     },[loadProducts])
@@ -114,7 +116,7 @@ const ProductsOverviewScreen:NavigationStackScreenComponent= (props) => {
     )
 }
 
-ProductsOverviewScreen.navigationOptions = (props)=>{
+ProductsOverviewScreen.navigationOptions = (props:Props)=>{
 
     return {
         title:'All Products',

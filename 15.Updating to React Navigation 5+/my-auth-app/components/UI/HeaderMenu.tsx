@@ -2,8 +2,7 @@ import React from 'react'
 import { HeaderButtons, HeaderButton, Item, HiddenItem } from "react-navigation-header-buttons";
 import {Ionicons} from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
-import { withNavigation ,NavigationInjectedProps} from 'react-navigation';
-import { DrawerActions } from 'react-navigation-drawer';
+import { useNavigation, DrawerActions } from '@react-navigation/native';
 
 const IoniconsHeaderButton = passMeFurther => (
     // the `passMeFurther` variable here contains props from <Item .../> as well as <HeaderButtons ... />
@@ -14,14 +13,17 @@ const IoniconsHeaderButton = passMeFurther => (
 
 
 
-const HeaderMenu = (props:NavigationInjectedProps) => {
+const HeaderMenu = () => {
+
+    const navigation = useNavigation();
+
     return (
         <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
             <Item title="menu" iconName="ios-menu" onPress={() =>{
-                props.navigation.dispatch(DrawerActions.toggleDrawer());
+                navigation.dispatch(DrawerActions.toggleDrawer());
             }} />
         </HeaderButtons>
     )
 }
 
-export default withNavigation(HeaderMenu)
+export default HeaderMenu

@@ -8,7 +8,13 @@ import ProductItem from '../../components/shop/ProductItem'
 import { deleteProduct } from '../../store/product/actions'
 import HeaderItem from '../../components/UI/HeaderItem'
 
-const UserProductsScreen:NavigationStackScreenComponent = (props) => {
+import { AdminStackParamList } from "../../navigation/Navigator";
+import { StackScreenProps } from "@react-navigation/stack";
+import { Ionicons } from '@expo/vector-icons'
+
+type Props = StackScreenProps<AdminStackParamList,'UserProductsScreen'>
+
+const UserProductsScreen = (props:Props) => {
 
     const userProducts = useSelector((state:AppState) => state.product.userProducts);
     const dispatch = useDispatch();
@@ -70,13 +76,13 @@ const UserProductsScreen:NavigationStackScreenComponent = (props) => {
     )
 }
 
-UserProductsScreen.navigationOptions = (props)=>{
+UserProductsScreen.navigationOptions = (props:Props)=>{
 
     return {
         title:"Your Products",
         headerLeft:()=><HeaderMenu/>,
         headerRight:()=><HeaderItem iconName="ios-create" onPress={()=>{
-            props.navigation.push('EditProductScreen')
+            props.navigation.push('EditProductScreen',{})
         }} />
     }
 

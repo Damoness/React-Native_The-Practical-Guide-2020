@@ -8,7 +8,6 @@ import {
   ScrollView,
   ActivityIndicator,
 } from "react-native";
-import { NavigationStackScreenComponent } from "react-navigation-stack";
 import Product from "../../models/product";
 import HeaderItem from "../../components/UI/HeaderItem";
 import { useDispatch } from "react-redux";
@@ -83,8 +82,15 @@ function formReducer(state: TestState, action: TestAction): TestState {
   }
 }
 
-const EditProductScreen: NavigationStackScreenComponent<Params> = (props) => {
-  const product = props.navigation.getParam("product");
+
+import { AdminStackParamList } from "../../navigation/Navigator";
+import { StackScreenProps } from "@react-navigation/stack";
+
+type Props = StackScreenProps<AdminStackParamList,'EditProductScreen'>
+
+const EditProductScreen = ({navigation,route}:Props) => {
+
+  const product = route.params.product;
 
   const isEditing = !!product;
 
@@ -143,7 +149,7 @@ const EditProductScreen: NavigationStackScreenComponent<Params> = (props) => {
 
       setIsLoading(false)
 
-      props.navigation.goBack();
+      navigation.goBack();
       
     } catch (error) {
       
@@ -155,11 +161,20 @@ const EditProductScreen: NavigationStackScreenComponent<Params> = (props) => {
     
   }, [dispatch, title, imageUrl, description, price]);
 
-  useEffect(() => {
-    props.navigation.setParams({ submit: submitHandler });
+  
 
-    return () => {};
-  }, [submitHandler]);
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      title: isEditing ? "Edit Product" : "Add Product",
+      headerRight: () => (
+        <HeaderItem
+          iconName="ios-checkmark"
+          onPress={submitHandler}
+        />
+      ),
+    });
+  }, [navigation, submitHandler]);
+
 
   const inputChangeHandler = useCallback(
     (inputIdentifier, inputValue, inputValidity) => {
@@ -176,6 +191,7 @@ const EditProductScreen: NavigationStackScreenComponent<Params> = (props) => {
     },
     [dispatchFormState]
   );
+
 
 
   useEffect(()=>{
@@ -279,21 +295,22 @@ const styles = StyleSheet.create({
   }
 });
 
-EditProductScreen.navigationOptions = (props) => {
-  const product = props.navigation.getParam("product");
-  const isEditing = !!product;
+// EditProductScreen.navigationOptions = (props:Props) => {
 
-  const voidFunction = () => {};
+//   const product = props.route.params.product;
+//   const isEditing = !!product;
 
-  return {
-    title: isEditing ? "Edit Product" : "Add Product",
-    headerRight: () => (
-      <HeaderItem
-        iconName="ios-checkmark"
-        onPress={props.navigation.getParam("submit") || voidFunction}
-      />
-    ),
-  };
-};
+//   const voidFunction = () => {};
+
+//   return {
+//     title: isEditing ? "Edit Product" : "Add Product",
+//     headerRight: () => (
+//       <HeaderItem
+//         iconName="ios-checkmark"
+//         onPress={props.navigation.getParam("submit") || voidFunction}
+//       />
+//     ),
+//   };
+// };
 
 export default EditProductScreen;

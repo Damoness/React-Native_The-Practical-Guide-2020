@@ -1,14 +1,17 @@
 import React,{useEffect,useState} from "react";
 import {FlatList,View,ActivityIndicator,StyleSheet,Text} from "react-native";
-import { NavigationStackScreenComponent } from "react-navigation-stack";
 import HeaderMenu from "../../components/UI/HeaderMenu";
 import {useSelector, useDispatch } from "react-redux";
 import { AppState } from "../../store";
 import OrderItem from "../../components/shop/OrderItem";
 import { fetchOrders } from "../../store/order/actions";
 import Colors from "../../constants/Colors";
+import { OrderStackParamList } from "../../navigation/Navigator";
+import { StackScreenProps } from "@react-navigation/stack";
 
-const OrdersScreen: NavigationStackScreenComponent = () => {
+type Props = StackScreenProps<OrderStackParamList,'OrdersScreen'>
+
+const OrdersScreen = (props:Props) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing,setIsRefreshing] = useState(false);
@@ -67,7 +70,7 @@ const OrdersScreen: NavigationStackScreenComponent = () => {
   );
 };
 
-OrdersScreen.navigationOptions = (props) => {
+OrdersScreen.navigationOptions = (props:Props) => {
   return {
     title: "Your Orders",
     headerLeft: () => <HeaderMenu />,

@@ -1,6 +1,5 @@
 
 
-
 async function DELETE(url:string){
 
     try {

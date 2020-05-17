@@ -118,7 +118,7 @@ const AuthScreen:NavigationStackScreenComponent = (props) => {
             
         }
 
-        props.navigation.navigate('App')
+        //props.navigation.navigate('App')
         
     } catch (error) {
 
